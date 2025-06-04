@@ -1,0 +1,4 @@
+1803245157,Practical Game Design,53.51,Adam Kramarzewski and Ennio De Nucci,true,4
+1492077213,Learning Go,49.95,Jon Bodner,true,6
+786474899,Last Stand on Bataan,29.95,Christopher L. Kolakowski,false,2
+137464401,Code that fits in your head,39.99,Mark Seemann,false,8

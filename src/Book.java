@@ -108,6 +108,7 @@ public class Book {
      */
     public double sellBook(int numberSold)
     {
+        return 0;
     }
 
 

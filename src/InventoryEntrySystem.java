@@ -5,6 +5,7 @@ import java.io.FileWriter;
 public class InventoryEntrySystem {
     public static final String BOOK_INVENTORY = "BooksInStock.txt";
     public static final String FOOD_INVENTORY = "FoodInventory.txt";
+    public static final String MISC_INVENTORY = "MiscInventory.txt";
     private Scanner inputReader;
 
     public InventoryEntrySystem() {
@@ -33,21 +34,35 @@ public class InventoryEntrySystem {
 
     public void addFoodItem(StoreInventory currentInventory){
         System.out.print("Enter the name of the snack food to add to the inventory:");
-        String foodName = inputReader.next();
+        String foodName = inputReader.nextLine();
+        if (foodName.equals("")){
+            foodName = inputReader.nextLine();
+        }
+        var found = false;
         for(var snack: currentInventory.getFoodInStock()){
-            var found = false;
             if (snack.getName().equalsIgnoreCase(foodName)){
                 updateFoodQuantity(snack);
                 found = true;
+                break;
             }
-            if(!found){
-                addFoodItem(currentInventory);
-            }
-            saveFoodInventory(currentInventory);
         }
+        if(!found){
+            var newSnack = addNewFoodItem(foodName);
+            currentInventory.getFoodInStock().add(newSnack);
+        }
+        saveFoodInventory(currentInventory);
     }
 
-    private void saveFoodInventory(StoreInventory currentInventory) {
+    private Food addNewFoodItem(String foodName) {
+        System.out.println("Adding new Food item: "+foodName);
+        System.out.print("Enter price of each "+foodName+":");
+        var price = inputReader.nextFloat();
+        System.out.print("Enter quantity of "+foodName+" that we have:");
+        var quantity = inputReader.nextInt();
+        return new Food(foodName, price, quantity);
+    }
+
+    void saveFoodInventory(StoreInventory currentInventory) {
         try(var foodFileSaver = new FileWriter(FOOD_INVENTORY)){
             for (var snack : currentInventory.getFoodInStock()) {
                 var csvString = ""+snack.getName()+","+snack.getPrice()+","
@@ -75,6 +90,7 @@ public class InventoryEntrySystem {
             if (book.getISBN() == newISBN) {
                 updateBookQuantity(book);
                 foundIt = true;
+                break;
             }
         }
         if (!foundIt) {
@@ -84,7 +100,7 @@ public class InventoryEntrySystem {
         saveBookInventory(currentInventory);
     }
 
-    private void saveBookInventory(StoreInventory currentInventory) {
+    void saveBookInventory(StoreInventory currentInventory) {
         //it is not that efficient to save the whole thing everytime
         //we edit anything, but it is easy to implement and it is 9pm and I have
         //to drive my older sons to their job at 7am
@@ -108,6 +124,7 @@ public class InventoryEntrySystem {
     private Book addNewBook(int newISBN) {
         System.out.print("Adding new book for ISBN " + newISBN);
         System.out.print("Enter the Book Author: ");
+        inputReader.nextLine();//kludge to clear the leftover '\n'
         var newAuthor = inputReader.nextLine();
         System.out.print("Enter the Book Title: ");
         var newTitle = inputReader.nextLine();
@@ -128,7 +145,48 @@ public class InventoryEntrySystem {
         book.addToStock(quantity);
     }
 
-    public void addMiscItem(StoreInventory currentInventory){}
+    public void addMiscItem(StoreInventory currentInventory){
+        System.out.print("Enter the UPC code item you want to add to the inventory:");
+        var upcCode = inputReader.nextInt();
+        var foundIt = false;
+        for(var item: currentInventory.getMiscStock()){
+            if(item.getUPC() == upcCode){
+                System.out.print("How many new "+item.getName()+" do we have ");
+                int quantity = inputReader.nextInt();
+                item.addToStock(quantity);
+                foundIt = true;
+                break;
+            }
+        }
+        if(!foundIt){
+            var newItem = addNewMiscItem(upcCode);
+            currentInventory.getMiscStock().add(newItem);
+        }
+        saveMiscInventory(currentInventory);
+    }
+
+    void saveMiscInventory(StoreInventory currentInventory) {
+        try(var miscSaver = new FileWriter(MISC_INVENTORY)){
+            for (var miscItem : currentInventory.getMiscStock()) {
+                var csvString = ""+miscItem.getUPC()+","+miscItem.getName()+","+miscItem.getPrice()+
+                        ","+miscItem.getQuantityInStock()+System.lineSeparator();
+                miscSaver.write(csvString);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private OtherItem addNewMiscItem(int UPCcode) {
+        System.out.print("Adding new Misc item with UPC: " + UPCcode);
+        System.out.print("Enter the Misc Item Title: ");
+        var newTitle = inputReader.nextLine();
+        System.out.print("Enter the Misc Item Price: ");
+        var newPrice = inputReader.nextFloat();
+        System.out.print("Enter the Misc Item Quantity: ");
+        var quantity = inputReader.nextInt();
+        return new OtherItem(UPCcode, newTitle, newPrice, quantity);
+    }
 
     private void displayMenu(){
         System.out.println("Welcome to the Inventory Stocking System!");
