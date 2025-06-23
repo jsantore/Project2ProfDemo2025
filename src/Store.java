@@ -41,7 +41,7 @@ public class Store {
 
     public Store() {
         currentInventory = new StoreInventory();
-        cashRegister = new PointOfSale();
+        cashRegister = new PointOfSale(currentInventory);
         stockingInterface = new InventoryEntrySystem();
         loadExistingInventory();
     }
