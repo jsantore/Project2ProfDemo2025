@@ -62,6 +62,9 @@ public class Food {
      * @param quantityOfNewStock
      */
     public void addToStock(int quantityOfNewStock) {
+        if (quantityOfNewStock > 0) {
+            numberInStock += quantityOfNewStock;
+        }
     }
 
 
@@ -70,7 +73,17 @@ public class Food {
      * @return double
      */
     public double sellFood(int numberSold) {
-        return 0;
+        if (numberSold <= 0) {
+            return 0;
+        }
+        if (numberSold > numberInStock) {
+            return 0;
+        }
+        else {
+            double totalCost = numberSold * price;
+            numberInStock -= numberSold;
+            return totalCost;
+        }
     }
 
 }

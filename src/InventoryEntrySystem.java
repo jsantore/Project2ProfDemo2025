@@ -147,7 +147,7 @@ public class InventoryEntrySystem {
 
     public void addMiscItem(StoreInventory currentInventory){
         System.out.print("Enter the UPC code item you want to add to the inventory:");
-        var upcCode = inputReader.nextInt();
+        var upcCode = inputReader.nextLong();
         var foundIt = false;
         for(var item: currentInventory.getMiscStock()){
             if(item.getUPC() == upcCode){
@@ -177,9 +177,10 @@ public class InventoryEntrySystem {
         }
     }
 
-    private OtherItem addNewMiscItem(int UPCcode) {
-        System.out.print("Adding new Misc item with UPC: " + UPCcode);
+    private OtherItem addNewMiscItem(long UPCcode) {
+        System.out.println("Adding new Misc item with UPC: " + UPCcode);
         System.out.print("Enter the Misc Item Title: ");
+        inputReader.nextLine();//kludge because of trailing \n left over from above
         var newTitle = inputReader.nextLine();
         System.out.print("Enter the Misc Item Price: ");
         var newPrice = inputReader.nextFloat();

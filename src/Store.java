@@ -11,8 +11,12 @@ public class Store {
 
     public static void main(String[] args) {
         var theStore = new Store();
-        if (selectMode())
+        if (selectMode()) {
             theStore.runCashierInterface();
+            theStore.stockingInterface.saveBookInventory(theStore.currentInventory);
+            theStore.stockingInterface.saveFoodInventory(theStore.currentInventory);
+            theStore.stockingInterface.saveMiscInventory(theStore.currentInventory);
+        }
         else
             theStore.runStockerInterface();
 
@@ -66,7 +70,7 @@ public class Store {
     private void loadMiscInventoryData(List<String> miscInventoryData) {
         for (String itemline : miscInventoryData) {
             String[] itemData = itemline.split(",");
-            int upc = Integer.parseInt(itemData[0]);
+            var upc = Long.parseLong(itemData[0]);
             var name = itemData[1];
             var price = Float.parseFloat(itemData[2]);
             int quantity = Integer.parseInt(itemData[3]);
@@ -101,7 +105,6 @@ public class Store {
     }
 
     public void runStockerInterface(){
-
         stockingInterface.runStockingProgram(currentInventory);
     }
 

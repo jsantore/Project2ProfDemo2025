@@ -9,7 +9,7 @@ public class OtherItem {
     // Fields
     //
 
-    private int UPCcode;
+    private long UPCcode;
     private String Name;
     private float price;
     private int quantity;
@@ -17,7 +17,7 @@ public class OtherItem {
     //
     // Constructors
     //
-    public  OtherItem(int UPC, String itemName, float itemPrice, int numberInStock)
+    public  OtherItem(long UPC, String itemName, float itemPrice, int numberInStock)
     {
         UPCcode = UPC;
         Name = itemName;
@@ -34,7 +34,7 @@ public class OtherItem {
      * Get the value of UPCcode
      * @return the value of UPCcode
      */
-    public int getUPC () {
+    public long getUPC () {
         return UPCcode;
     }
 
@@ -74,14 +74,29 @@ public class OtherItem {
      */
     public void addToStock(int quantityOfNewItems)
     {
+        if (quantityOfNewItems > 0) {
+            quantity += quantityOfNewItems;
+        }
     }
 
 
     /**
      * @param        numberSold
      */
-    public void sellMisc(int numberSold)
+    public double sellMisc(int numberSold)
     {
+        if (numberSold <= 0) {
+            return 0;
+        }
+        else if (numberSold > quantity) {
+            return 0;
+        }
+        else {
+            double totalCost = numberSold * price;
+            totalCost += totalCost * 0.0625;
+            quantity -= numberSold;
+            return totalCost;
+        }
     }
 
 

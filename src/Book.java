@@ -99,6 +99,9 @@ public class Book {
      */
     public void addToStock(int numberToAdd)
     {
+        if (numberToAdd < 0) {
+            quantity += numberToAdd;
+        }
     }
 
 
@@ -108,7 +111,20 @@ public class Book {
      */
     public double sellBook(int numberSold)
     {
-        return 0;
+        if (numberSold <= 0) {
+            return 0;
+        }
+        else if (numberSold > quantity) {
+            return 0;
+        }
+        else {
+            double totalCost = numberSold * price;
+            if (!isTextbook){
+                totalCost += totalCost * 0.0625;
+            }
+            quantity -= numberSold;
+            return totalCost;
+        }
     }
 
 
